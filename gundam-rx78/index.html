@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUNDAM RX-78 // Mobile Suit Blueprint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a14;
+            --surface: #12121f;
+            --border: #2a2a4a;
+            --red: #ff4757;
+            --blue: #3498db;
+            --yellow: #ffd700;
+            --white: #ffffff;
+            --cyan: #00d4ff;
+            --green: #00ff88;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg);
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            border-bottom: 3px solid var(--red);
+            background: linear-gradient(180deg, rgba(255, 71, 87, 0.1) 0%, transparent 100%);
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--white);
+            text-shadow: 0 0 30px var(--red);
+            margin-bottom: 10px;
+        }
+
+        .header .model {
+            font-size: 1.5rem;
+            color: var(--red);
+            letter-spacing: 8px;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .classification {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 30px;
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--red);
+            border-left: 4px solid var(--red);
+            padding-left: 16px;
+            margin-bottom: 30px;
+        }
+
+        .blueprint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--red);
+        }
+
+        .card h3 {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .card .stat {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card .stat span {
+            color: #888;
+        }
+
+        .card .stat strong {
+            color: var(--yellow);
+        }
+
+        /* Schematic */
+        .schematic {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a14 100%);
+            border: 2px solid var(--border);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .schematic svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Specs table */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .specs-table th {
+            background: var(--surface);
+            color: var(--red);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .specs-table td {
+            color: #aaa;
+        }
+
+        .specs-table tr:hover td {
+            background: rgba(255, 71, 87, 0.05);
+        }
+
+        /* Weapon list */
+        .weapon-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .weapon-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-left: 4px solid var(--red);
+        }
+
+        .weapon-item h4 {
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .weapon-item p {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .weapon-item .type {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--red);
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 2px solid var(--red);
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        .warning {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid var(--red);
+            padding: 16px;
+            margin-top: 20px;
+            color: var(--red);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RX-78</h1>
+        <div class="model">GUNDAM</div>
+        <div class="subtitle">Federation Main Mobile Suit // Operation V</div>
+        <div class="classification">E.F.S.F. CLASSIFIED</div>
+    </div>
+
+    <div class="container">
+        <!-- Overview -->
+        <div class="section">
+            <h2 class="section-title">01 // OVERVIEW</h2>
+            <div class="blueprint-grid">
+                <div class="card">
+                    <h3>Designation</h3>
+                    <p>The RX-78 Gundam is a prototype mobile suit developed by the Earth Federation as part of Operation V. It was the first mobile suit to use Luna Titanium armor.</p>
+                    <div class="stat">
+                        <span>Status</span>
+                        <strong>LEGENDARY</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Designer</h3>
+                    <p>Developed at Side 7 by Tem Ray. Features revolutionary movable frame technology and twin eye cameras for enhanced targeting.</p>
+                    <div class="stat">
+                        <span>Manufacturer</strong>
+                        <strong>ANAHEIM ELECTRONICS</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Pilot</h3>
+                    <p>Amuro Ray, a 15-year-old civilian, became its pilot during the One Year War. The Gundam became a symbol of hope for the Federation.</p>
+                    <div class="stat">
+                        <span>Fame</span>
+                        <strong>WHITE DEATH</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Specifications -->
+        <div class="section">
+            <h2 class="section-title">02 // TECHNICAL SPECIFICATIONS</h2>
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Model Number</td>
+                        <td>RX-78-2</td>
+                        <td>Second prototype unit</td>
+                    </tr>
+                    <tr>
+                        <td>Head Height</td>
+                        <td>18.0 meters</td>
+                        <td>Standard mobile suit scale</td>
+                    </tr>
+                    <tr>
+                        <td>Full Height</td>
+                        <td>18.5 meters</td>
+                        <td>With antenna array</td>
+                    </tr>
+                    <tr>
+                        <td>Weight (Empty)</td>
+                        <td>43.4 metric tons</td>
+                        <td>Without equipment</td>
+                    </tr>
+                    <tr>
+                        <td>Weight (Full)</td>
+                        <td>60.0 metric tons</td>
+                        <td>With max armor and weapons</td>
+                    </tr>
+                    <tr>
+                        <td>Armor Material</td>
+                        <td>Luna Titanium</td>
+                        <td>70% lighter than steel, 3x stronger</td>
+                    </tr>
+                    <tr>
+                        <td>Power Output</td>
+                        <td>1,380 kW</td>
+                        <td>Minovsky ultracompact fusion reactor</td>
+                    </tr>
+                    <tr>
+                        <td>Thruster Output</td>
+                        <td>55,500 kg</td>
+                        <td>Main thrusters only</td>
+                    </tr>
+                    <tr>
+                        <td>Max Speed</td>
+                        <td>165 km/h</td>
+                        <td>Ground running speed</td>
+                    </tr>
+                    <tr>
+                        <td>Acceleration</td>
+                        <td>1.93 G</td>
+                        <td>In space with full load</td>
+                    </tr>
+                    <tr>
+                        <td>Sensor Range</td>
+                        <td>6,200 meters</td>
+                        <td>Visual detection range</td>
+                    </tr>
+                    <tr>
+                        <td>Humanoid Ratio</td>
+                        <td>Perfect</td>
+                        <td>Optimal for mobile combat</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Visual Blueprint -->
+        <div class="section">
+            <h2 class="section-title">03 // STRUCTURAL SCHEMATIC</h2>
+            <div class="schematic">
+                <svg viewBox="0 0 500 800" xmlns="http://www.w3.org/2000/svg" style="max-width: 400px;">
+                    <defs>
+                        <linearGradient id="redArmor" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff6b6b"/>
+                            <stop offset="100%" style="stop-color:#c0392b"/>
+                        </linearGradient>
+                        <linearGradient id="blueArmor" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5dade2"/>
+                            <stop offset="100%" style="stop-color:#2980b9"/>
+                        </linearGradient>
+                        <linearGradient id="whiteArmor" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="100%" style="stop-color:#bdc3c7"/>
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- Background grid -->
+                    <defs>
+                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a2a4a" stroke-width="0.3"/>
+                        </pattern>
+                    </defs>
+                    <rect width="500" height="800" fill="url(#grid)"/>
+
+                    <!-- Gundam Body -->
+                    <g transform="translate(250, 400)">
+                        <!-- V-Fin Antenna -->
+                        <polygon points="-5,-280 -40,-350 -30,-350 0,-290 30,-350 40,-350 5,-280" fill="var(--yellow)" stroke="#ffd700" stroke-width="1"/>
+                        <circle cx="0" cy="-290" r="8" fill="var(--red)" filter="url(#glow)"/>
+
+                        <!-- Head -->
+                        <rect x="-35" y="-275" width="70" height="60" rx="5" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="-30" y="-265" width="25" height="15" rx="2" fill="#1a1a1a"/>
+                        <rect x="5" y="-265" width="25" height="15" rx="2" fill="#1a1a1a"/>
+                        <rect x="-28" y="-262" width="8" height="8" fill="var(--green)" filter="url(#glow)">
+                            <animate attributeName="fill" values="#00ff88;#00d4ff;#00ff88" dur="2s" repeatCount="indefinite"/>
+                        </rect>
+                        <rect x="20" y="-262" width="8" height="8" fill="var(--green)" filter="url(#glow)">
+                            <animate attributeName="fill" values="#00ff88;#00d4ff;#00ff88" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                        </rect>
+                        <rect x="-20" y="-240" width="40" height="8" fill="#666"/>
+
+                        <!-- Neck -->
+                        <rect x="-15" y="-215" width="30" height="15" fill="#888"/>
+
+                        <!-- Torso -->
+                        <rect x="-60" y="-200" width="120" height="120" rx="5" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+
+                        <!-- Chest vents -->
+                        <rect x="-50" y="-180" width="35" height="20" fill="var(--red)"/>
+                        <rect x="15" y="-180" width="35" height="20" fill="var(--red)"/>
+                        <rect x="-48" y="-178" width="31" height="16" fill="#333"/>
+                        <rect x="17" y="-178" width="31" height="16" fill="#333"/>
+
+                        <!-- Cockpit hatch -->
+                        <circle cx="0" cy="-130" r="15" fill="var(--yellow)" stroke="#ffd700" stroke-width="2"/>
+                        <circle cx="0" cy="-130" r="10" fill="#333"/>
+
+                        <!--腹部 (Abdomen) -->
+                        <rect x="-40" y="-80" width="80" height="40" fill="var(--red)"/>
+                        <rect x="-35" y="-75" width="70" height="30" fill="#c0392b"/>
+
+                        <!-- Left Shoulder -->
+                        <rect x="-100" y="-210" width="40" height="50" rx="3" fill="var(--white)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="-95" y="-200" width="30" height="15" fill="var(--red)"/>
+
+                        <!-- Right Shoulder -->
+                        <rect x="60" y="-210" width="40" height="50" rx="3" fill="var(--white)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="65" y="-200" width="30" height="15" fill="var(--red)"/>
+
+                        <!-- Left Arm -->
+                        <rect x="-110" y="-160" width="30" height="100" rx="3" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="-115" y="-60" width="40" height="40" rx="3" fill="var(--blue)" stroke="#2980b9" stroke-width="1"/>
+
+                        <!-- Right Arm -->
+                        <rect x="80" y="-160" width="30" height="100" rx="3" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="75" y="-60" width="40" height="40" rx="3" fill="var(--blue)" stroke="#2980b9" stroke-width="1"/>
+
+                        <!-- Beam Rifle -->
+                        <rect x="115" y="-80" width="20" height="100" fill="#333" stroke="#555" stroke-width="1"/>
+                        <rect x="110" y="-100" width="30" height="25" fill="#444"/>
+                        <circle cx="125" cy="-85" r="5" fill="var(--yellow)">
+                            <animate attributeName="fill" values="#ffd700;#ff4757;#ffd700" dur="1s" repeatCount="indefinite"/>
+                        </circle>
+
+                        <!-- Left Shield -->
+                        <rect x="-140" y="-50" width="35" height="150" rx="5" fill="var(--blue)" stroke="#2980b9" stroke-width="2"/>
+                        <rect x="-135" y="-40" width="25" height="20" fill="var(--yellow)"/>
+                        <rect x="-135" y="50" width="25" height="40" fill="var(--red)"/>
+
+                        <!-- Waist -->
+                        <rect x="-70" y="-40" width="140" height="40" fill="var(--red)"/>
+                        <rect x="-65" y="-35" width="130" height="30" fill="#c0392b"/>
+
+                        <!-- Left Leg -->
+                        <rect x="-60" y="0" width="45" height="120" rx="3" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="-65" y="120" width="55" height="100" rx="3" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="-70" y="220" width="65" height="40" rx="3" fill="var(--blue)" stroke="#2980b9" stroke-width="1"/>
+
+                        <!-- Right Leg -->
+                        <rect x="15" y="0" width="45" height="120" rx="3" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="10" y="120" width="55" height="100" rx="3" fill="url(#whiteArmor)" stroke="#ddd" stroke-width="1"/>
+                        <rect x="5" y="220" width="65" height="40" rx="3" fill="var(--blue)" stroke="#2980b9" stroke-width="1"/>
+
+                        <!-- Knee joints -->
+                        <circle cx="-37" cy="120" r="12" fill="#888"/>
+                        <circle cx="37" cy="120" r="12" fill="#888"/>
+
+                        <!-- Feet -->
+                        <rect x="-75" y="260" width="70" height="25" rx="5" fill="var(--red)" stroke="#c0392b" stroke-width="1"/>
+                        <rect x="5" y="260" width="70" height="25" rx="5" fill="var(--red)" stroke="#c0392b" stroke-width="1"/>
+
+                        <!-- Thrusters on back -->
+                        <rect x="-30" y="-50" width="15" height="30" fill="#333"/>
+                        <rect x="15" y="-50" width="15" height="30" fill="#333"/>
+                        <ellipse cx="-22" cy="-15" rx="8" ry="5" fill="var(--cyan)">
+                            <animate attributeName="ry" values="5;8;5" dur="0.5s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="22" cy="-15" rx="8" ry="5" fill="var(--cyan)">
+                            <animate attributeName="ry" values="5;8;5" dur="0.5s" repeatCount="indefinite" begin="0.25s"/>
+                        </ellipse>
+                    </g>
+
+                    <!-- Labels -->
+                    <g font-family="Share Tech Mono" font-size="10">
+                        <!-- Head label -->
+                        <line x1="310" y1="110" x2="380" y2="80" stroke="var(--yellow)" stroke-width="1"/>
+                        <text x="385" y="75" fill="var(--yellow)">HEAD</text>
+                        <text x="385" y="88" fill="#888" font-size="8">Twin Eye Cameras</text>
+
+                        <!-- Chest label -->
+                        <line x1="320" y1="220" x2="380" y2="200" stroke="var(--red)" stroke-width="1"/>
+                        <text x="385" y="195" fill="var(--red)">CHEST</text>
+                        <text x="385" y="208" fill="#888" font-size="8">Vents + Cockpit</text>
+
+                        <!-- Arm label -->
+                        <line x1="150" y1="340" x2="80" y2="320" stroke="var(--blue)" stroke-width="1"/>
+                        <text x="10" y="315" fill="var(--blue)">SHIELD</text>
+                        <text x="10" y="328" fill="#888" font-size="8">Luna Titanium</text>
+
+                        <!-- Weapon label -->
+                        <line x1="380" y1="320" x2="430" y2="300" stroke="#888" stroke-width="1"/>
+                        <text x="435" y="295" fill="#888">BEAM RIFLE</text>
+                        <text x="435" y="308" fill="#666" font-size="8">Output: 0.9 MW</text>
+
+                        <!-- Leg label -->
+                        <line x1="200" y1="600" x2="100" y2="650" stroke="var(--cyan)" stroke-width="1"/>
+                        <text x="10" y="645" fill="var(--cyan)">LEGS</text>
+                        <text x="10" y="658" fill="#888" font-size="8">Ground Speed: 165 km/h</text>
+
+                        <!-- Thruster label -->
+                        <line x1="260" y1="340" x2="80" y2="380" stroke="var(--cyan)" stroke-width="1"/>
+                        <text x="10" y="375" fill="var(--cyan)">THRUSTERS</text>
+                        <text x="10" y="388" fill="#888" font-size="8">55,500 kg total</text>
+                    </g>
+
+                    <!-- Height scale -->
+                    <line x1="30" y1="100" x2="30" y2="700" stroke="var(--white)" stroke-width="1"/>
+                    <line x1="25" y1="100" x2="35" y2="100" stroke="var(--white)" stroke-width="1"/>
+                    <line x1="25" y1="700" x2="35" y2="700" stroke="var(--white)" stroke-width="1"/>
+                    <text x="30" y="400" fill="var(--white)" font-size="10" transform="rotate(-90, 30, 400)">18.0 METERS</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Weapon Systems -->
+        <div class="section">
+            <h2 class="section-title">04 // WEAPON SYSTEMS</h2>
+            <div class="weapon-list">
+                <div class="weapon-item">
+                    <span class="type">PRIMARY</span>
+                    <h4>Beam Rifle (XHB-79)</h4>
+                    <p>Standard energy weapon with 0.9 MW output. Powered by E-cap system. Effective range: 3,400 meters.</p>
+                </div>
+                <div class="weapon-item">
+                    <span class="type">SHIELD</span>
+                    <h4>Luna Titanium Shield</h4>
+                    <p>1.8m tall defensive shield. Can withstand 3 direct hits from a Zaku machine gun. Doubles as melee weapon.</p>
+                </div>
+                <div class="weapon-item">
+                    <span class="type">MELEE</span>
+                    <h4>Beam Saber (SB-13)</h4>
+                    <p>High-energy plasma blade stored in backpack. Cuts through mobile suit armor. 2 units carried.</p>
+                </div>
+                <div class="weapon-item">
+                    <span class="type">VESTIGAL</span>
+                    <h4>Vulcan Pods (60mm)</h4>
+                    <p>Head-mounted autocannons. 120 rounds total. Effective against missiles and lightly armored targets.</p>
+                </div>
+                <div class="weapon-item">
+                    <span class="type">SPECIAL</span>
+                    <h4>Hyper Bazooka (H&B S-G2)</h4>
+                    <p>Optional weapon. 280mm anti-ship bazooka. High explosive rounds. Used against Musai-class ships.</p>
+                </div>
+                <div class="weapon-item">
+                    <span class="type">OPTIONAL</span>
+                    <h4>Giant Bazooka (Type B)</h4>
+                    <p>Heavy ordnance for ship-to-ship combat. Carries 4 rockets per reload. Used in final battle.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Internal Systems -->
+        <div class="section">
+            <h2 class="section-title">05 // INTERNAL SYSTEMS</h2>
+            <div class="blueprint-grid">
+                <div class="card">
+                    <h3>⚡ Power Core</h3>
+                    <p>Minovsky Ultracompact Fusion Reactor. Outputs 1,380 kW. Clean energy with no radiation leakage.</p>
+                    <div class="stat">
+                        <span>Output</span>
+                        <strong>1,380 kW</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🛡️ Armor</h3>
+                    <p>Luna Titanium alloy. 70% lighter than steel, 3x stronger. Virtually impervious to beam weapons.</p>
+                    <div class="stat">
+                        <span>Material</span>
+                        <strong>LUNA TITANIUM</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>👁️ Sensors</h3>
+                    <p>Dual Eye Camera system with 240° field of view. Range: 6,200m visual, 20,000m radar.</p>
+                    <div class="stat">
+                        <span>Range</span>
+                        <strong>20,000m</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🎯 Computer</h3>
+                    <p>Movable Frame system with AI-assisted targeting. 60% reduction in pilot workload.</p>
+                    <div class="stat">
+                        <span>Speed</span>
+                        <strong>1.2 FLOPS</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🚀 Thrusters</h3>
+                    <p>8 vernier thrusters for maneuverability. Total output: 55,500 kg. Enables high-G turns.</p>
+                    <div class="stat">
+                        <span>Total Output</span>
+                        <strong>55,500 kg</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🫁 Life Support</h3>
+                    <p>Cockpit sealed for space operation. 30 minutes emergency oxygen. Supports pilot for 72 hours.</p>
+                    <div class="stat">
+                        <span>Capacity</span>
+                        <strong>72 HOURS</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Battle History -->
+        <div class="section">
+            <h2 class="section-title">06 // ONE YEAR WAR BATTLE LOG</h2>
+            <table class="specs-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Battle</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>UC 0079.08.15</td>
+                        <td>Side 7 Incident</td>
+                        <td style="color: var(--green);">VICTORY</td>
+                    </tr>
+                    <tr>
+                        <td>UC 0079.09.18</td>
+                        <td>Battle of Luum</td>
+                        <td style="color: var(--green);">VICTORY</td>
+                    </tr>
+                    <tr>
+                        <td>UC 0079.10.06</td>
+                        <td>Operation V</td>
+                        <td style="color: var(--green);">VICTORY</td>
+                    </tr>
+                    <tr>
+                        <td>UC 0079.11.07</td>
+                        <td>Battle of Solomon</td>
+                        <td style="color: var(--green);">VICTORY</td>
+                    </tr>
+                    <tr>
+                        <td>UC 0079.12.24</td>
+                        <td>Battle of A Baoa Qu</td>
+                        <td style="color: var(--yellow);">DEPLOYED</td>
+                    </tr>
+                    <tr>
+                        <td>UC 0079.12.30</td>
+                        <td>Final Battle</td>
+                        <td style="color: var(--red);">DESTROYED</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="warning">
+            ⚠️ WARNING: This unit is classified as a strategic weapon by the Earth Federation. Unauthorized access or tampering will result in immediate court-martial under Article 15 of the Universal Century Military Code.
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>GUNDAM RX-78 BLUEPRINT // E.F.S.F. CLASSIFIED // UNIVERSAL CENTURY 0079</p>
+        <p>The Mobile Suit that changed the course of the One Year War.</p>
+    </div>
+</body>
+</html>
